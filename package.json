@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Raghu30M/backend-devops-test#readme",
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.3.0"
   }
 }
