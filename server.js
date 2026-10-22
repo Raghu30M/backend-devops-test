@@ -1,6 +1,7 @@
 
 const express = require("express");
 const cors = require("cors");
+const connectDB = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,17 +13,22 @@ app.use(cors({
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+  res.send("DevOps backend is running!");
 });
 
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "OK",
     message: "Backend is healthy",
-    timestamp: new Date().toISOString(),
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+async function startServer() {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+startServer();
