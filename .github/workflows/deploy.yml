@@ -15,5 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Confirm workflow is running
-        run: echo "GitHub Actions workflow started successfully"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check server.js
+          node --check db.js
+
+      - name: Confirm workflow completed
+        run: echo "Backend dependency installation and syntax checks passed"
