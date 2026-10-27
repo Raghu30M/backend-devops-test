@@ -1,0 +1,9 @@
+services:
+  backend:
+    build: .
+    image: backend-devops-test:1.0
+    container_name: backend-devops-test
+    network_mode: host
+    env_file:
+      - /etc/devops-backend.env
+    restart: unless-stopped
