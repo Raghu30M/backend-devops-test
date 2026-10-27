@@ -29,5 +29,23 @@ jobs:
           node --check server.js
           node --check db.js
 
-      - name: Confirm workflow completed
-        run: echo "Backend dependency installation and syntax checks passed"
+      - name: Build Docker image
+        run: docker build -t backend-devops-test:ci .
+
+      - name: Test SSH connection to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_PORT: ${{ secrets.EC2_PORT }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$EC2_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$EC2_PORT" "$EC2_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key \
+            -p "$EC2_PORT" \
+            -o BatchMode=yes \
+            "$EC2_USER@$EC2_HOST" \
+            'echo "SSH connection to EC2 successful"'
